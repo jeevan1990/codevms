@@ -1,0 +1,181 @@
+<html>
+<head>
+<title>ActiveX Example 1.1 of SecuGen FDx Pro SDK </title>
+</head>
+
+<script lang=javascript>
+<!--
+var aaa = 0;
+function fnOpenDevice()
+{
+	for ( i=0; i<3; i++)
+	{
+		document.frmmain.objFP[i].DeviceID = document.frmmain.inc.value;
+		document.frmmain.objFP[i].CodeName = document.frmmain.dev.value;
+		document.frmmain.objFP[i].MinutiaeMode = document.frmmain.templateFormat.value;
+	}
+
+	// template format of objVerify should be the same to those of objFP[]
+	objVerify.MinutiaeMode = document.frmmain.templateFormat.value;
+	return;
+}
+
+function fnCapture(idx)
+{
+	document.frmmain.objFP[idx].Capture();
+	//alert(	document.frmmain.objFP[idx].Capture());
+	var result = document.frmmain.objFP[idx].ErrorCode;
+	//alert(result);
+	if (result == 0)
+	{	
+		//var strimg1 = objFP.ImageTextData;
+		//alert(strimg1);
+	
+		var strmin = document.frmmain.objFP[idx].MinTextData;
+		//alert(strmin);
+		document.frmmain.min[idx].value = strmin;
+		//alert(document.frmmain.min[idx].value);
+	}
+	else
+		alert('failed - ' + result);
+
+	return;
+}
+
+function fnRegister()
+{
+	var strmin1 = document.frmmain.min[0].value;
+	var strmin2 = document.frmmain.min[0].value;
+
+	if ( objVerify.RegisterForText(strmin1, strmin2) && objVerify.ErrorCode == 0 )
+	{
+		document.getElementById("fingerprint").value = strmin1;
+		//alert(document.getElementById("fpdata").value);
+		alert('success- registered');
+	}
+	else
+		alert('failed - ' + objVerify.ErrorCode);
+		
+	return;
+}
+
+
+
+function fnSetimage()
+{
+	document.frmmain.objFP.ImageTextData = document.frmmain.img1.value;
+
+	return;
+}
+
+//form {
+//	width: 300px;
+//	margin: 0 auto;
+//}
+// -->
+
+</script>
+
+<body onload="fnOpenDevice()">
+<h4><b>Fingerprint Registration</b></h4>
+<p></p>
+
+<OBJECT id=objVerify style="LEFT: 0px; TOP: 0px" height=0 width=0 
+	classid="CLSID:8D613732-7D38-4664-A8B7-A24049B96117" 
+	name=objVerify VIEWASTEXT>
+</OBJECT>
+
+<form name=frmmain type=post action="/vms/uploadFingerprint.htm">
+<p>
+Reg. Id : <input type=text name=personId><br><br>
+Finger Index : <input type=text name=fingerindex><br>
+
+<div style="display:none" >
+Device Type :
+<select name=dev>
+<option value=0>FDP02
+<option value=1>FDU02
+<option selected value=2>FDU03
+<option value=3>FDU04
+<option  value=4>FDU05
+
+</select>
+
+Instance No. :
+<select name=inc>
+<option value=-1>-1	
+<option value=0>0
+<option value=1>1
+<option value=2>2
+<option value=3>3
+<option value=4>4
+<option value=5>5
+<option value=6>6
+<option value=7>7
+<option value=8>8
+<option value=9>9
+</select>
+</p>
+<p hidden>
+Template Format:
+<select name=templateFormat>
+<option value=256>ANSI 378
+<option value=512>SG 400
+<option value=768>ISO 19794-2
+</select>
+</p>
+</div>
+<!--<input type=button name=open value='Open Device' OnClick='fnOpenDevice();'>-->
+<p>
+
+<table border=1 cellspacing=0 cellpadding=0>
+<caption> Fingerprint Images </caption>
+<tr>
+<td>
+	<OBJECT id=objFP style="LEFT: 0px; WIDTH: 149px; TOP: 0px; HEIGHT: 182px" height=182 
+		width=149 classid="CLSID:D547FDD7-82F6-44e8-AFBA-7553ADCEE7C8" name=objFP VIEWASTEXT>
+	<PARAM NAME="CodeName" VALUE="1">
+	</OBJECT>
+</td>
+<!--
+<td>
+	<OBJECT id=objFP style="LEFT: 0px; WIDTH: 149px; TOP: 0px; HEIGHT: 182px" height=182 
+		width=149 classid="CLSID:D547FDD7-82F6-44e8-AFBA-7553ADCEE7C8" name=objFP VIEWASTEXT>
+	<PARAM NAME="CodeName" VALUE="1">
+	</OBJECT>
+</td>
+-->
+<div style="display:none">
+<td>
+	<OBJECT id=objFP style="LEFT: 0px; WIDTH: 0px; TOP: 0px; HEIGHT: 0px" height=182 
+		width=0 classid="CLSID:D547FDD7-82F6-44e8-AFBA-7553ADCEE7C8" name=objFP VIEWASTEXT>
+	<PARAM NAME="CodeName" VALUE="1">
+	</OBJECT>
+</td>
+</div>
+</p>
+</tr>
+<tr>
+<td align=center><input type=button name=btnCapture1 value='Capture' OnClick='fnCapture(0);'></td>
+<!--<td align=center><input type=button name=btnCapture2 value='Capture' OnClick='fnCapture(1);'></td>
+<td align=center><input type=button name=btnCapture3 value='Capture' OnClick='fnCapture(2);'></td>-->
+</tr>
+</table>
+ <input type="hidden" name="fpdata">
+<div style="display:none">
+
+min1  : <input type=text name=min><br>
+min2 : <input type=text name=min><br>
+</div>
+<p> 
+<input type=button name=btnRegister value='Register' OnClick='fnRegister();' style='width:200px'>
+<br>
+<br>
+<button type="submit" formmethod="post" formaction="FingerPrintDetails.html">Submit</button>
+ <!--<input type=button name=btnVerify value='VerifyEx' OnClick='fnVerifyEx();' style='width:200px'>
+<br>
+<input type=button name=btnVerify value='Verify' OnClick='fnVerify();' style='width:200px'> -->
+</form>
+
+</BODY>
+</HTML>
